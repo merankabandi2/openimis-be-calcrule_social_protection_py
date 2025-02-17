@@ -13,7 +13,7 @@ class BuilderToBillConverter:
         bill = {}
         cls._build_subject(bill, entity)
         cls._build_thirdparty(bill, payment_plan)
-        cls._build_code(bill)
+        cls._build_code(bill, entity)
         cls._build_price(bill, amount)
         cls._build_terms(bill, payment_plan, entity, end_date)
         cls._build_date_dates(bill, payment_plan, payment_cycle)
@@ -32,14 +32,15 @@ class BuilderToBillConverter:
         bill['thirdparty_type_id'] = f"{ContentType.objects.get_for_model(payment_plan).id}"
 
     @classmethod
-    def _build_code(cls, bill):
+    def _build_code(cls, bill, entity):
         code = CodeGenerator.generate_unique_code(
             'invoice',
             'Bill',
             'code',
             CalcruleSocialProtectionConfig.code_length
         )
-        bill["code"] = code
+        bill["code"] = f"{code}-{entity.json_ext.get('moyen_paiement', '').get('phoneNumber', '')}" if entity.json_ext.get('moyen_paiement', '') else code
+        bill["code_ext"] = bill["code"]
 
     @classmethod
     def _build_price(cls, bill, amount):

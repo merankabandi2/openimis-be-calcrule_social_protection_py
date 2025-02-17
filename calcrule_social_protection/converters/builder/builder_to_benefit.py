@@ -10,7 +10,7 @@ class BuilderToBenefitConverter:
     def to_benefit_obj(cls, entity, amount, payment_plan, payment_cycle):
         benefit = {}
         cls._build_individual(benefit, entity)
-        cls._build_code(benefit)
+        cls._build_code(benefit, entity)
         cls._build_amount(benefit, amount)
         cls._build_date_dates(benefit, payment_plan, payment_cycle)
         cls._build_type(benefit)
@@ -22,14 +22,15 @@ class BuilderToBenefitConverter:
         pass
 
     @classmethod
-    def _build_code(cls, benefit):
+    def _build_code(cls, benefit, entity):
         code = CodeGenerator.generate_unique_code(
             'payroll',
             'BenefitConsumption',
             'code',
             CalcruleSocialProtectionConfig.code_length
         )
-        benefit["code"] = code
+        benefit["code"] = f"{code}-{entity.json_ext.get('moyen_paiement', '').get('phoneNumber', '')}" if entity.json_ext.get('moyen_paiement', '') else code
+
 
     @classmethod
     def _build_amount(cls, benefit, amount):
