@@ -33,7 +33,7 @@ class BaseBenefitPackageStrategy(BenefitPackageStrategyInterface):
         # each beneficiary group from benefit plan assigned to this payment plan is a single benefit
         payroll = kwargs.get('payroll', None)
         beneficiaries = kwargs.get('beneficiaries_queryset', None)
-        if not beneficiaries:
+        if beneficiaries is None:
             beneficiaries = cls.BENEFICIARY_OBJECT.objects.filter(
                 benefit_plan=payment_plan.benefit_plan, status=BeneficiaryStatus.ACTIVE
             )
