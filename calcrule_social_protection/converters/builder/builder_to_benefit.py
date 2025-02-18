@@ -29,7 +29,8 @@ class BuilderToBenefitConverter:
             'code',
             CalcruleSocialProtectionConfig.code_length
         )
-        benefit["code"] = f"{code}-{entity.json_ext.get('moyen_paiement', '').get('phoneNumber', '')}" if entity.json_ext.get('moyen_paiement', '') else code
+        moyen_paiement = entity.json_ext.get('moyen_paiement', '')
+        benefit["code"] = f"{code}-{moyen_paiement.get('phoneNumber', '')}" if moyen_paiement else code
 
 
     @classmethod
