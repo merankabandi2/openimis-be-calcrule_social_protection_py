@@ -1,3 +1,5 @@
+import json
+
 from calcrule_social_protection.utils import CodeGenerator
 from calcrule_social_protection.apps import CalcruleSocialProtectionConfig
 from payroll.models import BenefitConsumptionStatus
@@ -15,6 +17,7 @@ class BuilderToBenefitConverter:
         cls._build_date_dates(benefit, payment_plan, payment_cycle)
         cls._build_type(benefit)
         cls._build_status(benefit)
+        cls._json_ext(benefit, entity)
         return benefit
 
     @classmethod
@@ -50,3 +53,8 @@ class BuilderToBenefitConverter:
     @classmethod
     def _build_status(cls, benefit):
         benefit["status"] = BenefitConsumptionStatus.ACCEPTED.value
+
+    @classmethod
+    def _json_ext(cls, benefit, entity):
+        moyen_paiement = entity.json_ext.get('moyen_paiement', '')
+        benefit["json_ext"] = json.dumps({"phoneNumber": moyen_paiement.get('phoneNumber', '')})
