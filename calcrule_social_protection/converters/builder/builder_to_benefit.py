@@ -58,4 +58,10 @@ class BuilderToBenefitConverter:
     def _json_ext(cls, benefit, entity):
         moyen_paiement = entity.json_ext.get('moyen_paiement', '')
         if moyen_paiement:
-            benefit["json_ext"] = {"phoneNumber": moyen_paiement.get('phoneNumber', '')}
+            benefit["json_ext"] = {"phoneNumber": moyen_paiement.get('phoneNumber', ''), "tp_account_number": moyen_paiement.get('tp_account_number', '')}
+            return
+
+        moyen_telecom = entity.json_ext.get('moyen_telecom', '')
+        if moyen_telecom:
+            benefit["json_ext"] = {"phoneNumber": moyen_telecom.get('msisdn', '')}
+            return
